@@ -291,8 +291,8 @@ footer p{font-size:.74rem}
 
 <script>
 const $=id=>document.getElementById(id);
-const SHEET_URL='';
-// Deckled (torn) paper edges
+const SHEET_URL = 'https://script.google.com/macros/s/AKfycbzZILZrC4XhYj5vWnUuj8deXKvRdnnGWT-jq5f8c4mBcVUFOup8mH2bXWYP4_t_fRsr/exec';
+  // Deckled (torn) paper edges
 function deckle(el,seed){
   let r=seed;const rnd=()=>(r=(r*9301+49297)%233280)/233280,n=44,a=1.1,p=[];
   for(let i=0;i<=n;i++)p.push([i/n*100,rnd()*a]);
