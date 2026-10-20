@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Ruby &amp; Gen · Virtual Wedding Invitation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+SC:wght@400;500;600&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Pinyon+Script&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bur:#6e1424;--bur2:#5a0f1c;--dusty:#8c5560;--ivory:#f3eee4;--paper:#efe9dc;--olive:#7d8466;--gold:#a58a57;--ink:#2e1a1c;--mute:#6d5c5c;--line:rgba(110,20,36,.25);
+  --sc:'Cormorant SC','Cormorant Garamond',Georgia,serif;--serif:'Cormorant Garamond',Georgia,serif;--script:'Pinyon Script',cursive;
+  --ease:cubic-bezier(.65,0,.25,1);
+  --noise:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3CfeColorMatrix values='0 0 0 0 .35 0 0 0 0 .28 0 0 0 0 .2 0 0 0 .5 -.18'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
+  --embw:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='260' fill='none' stroke-width='2.4' stroke-linecap='round'%3E%3Cdefs%3E%3Cg id='f'%3E%3Cpath d='M20 240C40 180 64 130 110 80M110 80c-22-4-34-20-34-38 20 4 34 18 34 38zM66 150c-20 2-36-9-40-27 20-2 36 7 40 27zM90 112c20-4 34-20 34-36M54 200c14-6 30-2 36 12M170 250c4-46 22-80 56-114M226 136c-20 0-32-14-32-30 18 2 30 14 32 30zM210 170c16-6 28-2 34 10'/%3E%3C/g%3E%3C/defs%3E%3Cuse href='%23f' stroke='rgba(20,0,6,.45)' x='2' y='2'/%3E%3Cuse href='%23f' stroke='rgba(255,200,205,.16)' x='-1' y='-1'/%3E%3C/svg%3E");
+}
+*{box-sizing:border-box;margin:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--serif);font-weight:500;font-size:1.15rem;line-height:1.6;color:var(--ink);background:var(--ivory) var(--noise);overflow-x:hidden;-webkit-tap-highlight-color:transparent}
+body.locked{overflow:hidden;height:100vh}
+:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+button,input,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--bur);outline-offset:3px}
+.sc{font-family:var(--sc);font-weight:500;letter-spacing:.24em;text-transform:none}
+.sh{filter:drop-shadow(0 10px 12px rgba(60,10,20,.28))}
+.dk{width:100%;height:100%}
+.paper{background:var(--noise),linear-gradient(160deg,#f2ede1,#e9e2d3);background-color:var(--paper)}
+/* ---------- ENVELOPE ---------- */
+#intro{position:fixed;inset:0;z-index:50;display:grid;place-items:center;background:var(--ivory) var(--noise);transition:opacity 1s,visibility 1s}
+#intro.gone{opacity:0;visibility:hidden}
+.hint{position:absolute;bottom:9%;font-size:.8rem;animation:pulse 2.4s ease-in-out infinite;transition:opacity .4s}
+.open .hint{opacity:0}
+@keyframes pulse{50%{opacity:.35}}
+.env{position:relative;width:min(84vw,400px);aspect-ratio:1.3;perspective:1300px;transition:transform 1.2s var(--ease) 1.2s}
+.env.open{transform:translateY(16vh)}
+.back{position:absolute;inset:0;background:#4f0c19;border-radius:3px;box-shadow:0 36px 50px -24px rgba(60,10,20,.6)}
+.card-in{position:absolute;left:5%;right:5%;top:4%;bottom:6%;z-index:2;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;background:var(--noise),#f1ebdf;transition:transform 1.3s var(--ease) .8s}
+.env.open .card-in{transform:translateY(-78%)}
+.card-in small{font-size:.58rem}
+.card-in b{font-family:var(--sc);font-weight:500;font-size:clamp(1.5rem,7vw,2rem);letter-spacing:.1em;line-height:1.15;margin-top:.3rem}
+.pocket{position:absolute;inset:0;z-index:3;border-radius:3px;background:var(--embw) 0 0/200px,linear-gradient(180deg,#7a1a2b,#5f1020);clip-path:polygon(0 0,50% 58%,100% 0,100% 100%,0 100%)}
+.flap{position:absolute;left:0;top:0;width:100%;height:58%;z-index:4;transform-origin:50% 0;transform-style:preserve-3d}
+.flap>div{position:absolute;inset:0;clip-path:polygon(0 0,100% 0,50% 100%);backface-visibility:hidden;-webkit-backface-visibility:hidden}
+.ff{background:var(--embw) 0 0/200px,linear-gradient(180deg,#7f1c2d,#66122287),#6e1424}
+.fb{background:var(--noise),linear-gradient(180deg,#efe8da,#e2d9c7);transform:rotateX(180deg)}
+.flap svg{position:absolute;inset:0;width:100%;height:100%}
+.env.open .flap{animation:flip 1.1s var(--ease) forwards}
+@keyframes flip{0%{transform:rotateX(0);z-index:4}49%{z-index:4}50%{z-index:1}100%{transform:rotateX(180deg);z-index:1}}
+.seal{position:absolute;left:50%;top:58%;width:84px;height:84px;margin:-42px 0 0 -42px;z-index:6;border:0;padding:0;background:none;cursor:pointer;filter:drop-shadow(0 5px 6px rgba(20,0,6,.5));transition:transform .35s,opacity .5s}
+.seal svg,.mdl{width:100%;height:100%;display:block}
+.seal:hover{transform:scale(1.08)}.seal:active{transform:scale(.94)}
+.env.open .seal{opacity:0;transform:scale(.7);pointer-events:none}
+/* ---------- HERO STACK ---------- */
+.hero{padding:3.5rem 0 1rem;overflow:hidden}
+.stack{position:relative;width:min(86vw,400px);margin:1.2rem auto 0}
+.layer{position:absolute}
+.l1{inset:-12px -16px -18px -10px;transform:rotate(2.2deg)}.l1 .dk{background:var(--noise),#6a1222}
+.l2{inset:-8px -22px -24px -2px;transform:rotate(-2.6deg)}.l2 .dk{background:var(--noise),var(--dusty)}
+.main{position:relative}
+.arch{position:relative;margin:2.2rem 1.5rem;padding:5.4rem .8rem 2.6rem;border:1px solid var(--gold);border-bottom:0;border-radius:999px 999px 0 0;text-align:center}
+.arch::before,.arch::after{content:"";position:absolute;bottom:0;width:1px;height:100%}
+.top{position:absolute;left:50%;top:-34px;width:130px;margin-left:-65px}
+.lab{font-family:var(--sc);font-weight:500;font-size:.78rem;letter-spacing:.26em;line-height:1.9}
+.nm{font-family:var(--sc);font-weight:500;font-size:clamp(2.5rem,13vw,3.5rem);letter-spacing:.07em;line-height:1.15;margin:1.1rem 0 1.3rem}
+.nm span{display:block;font-size:.8em}
+.rule{display:block;width:44px;height:1px;background:var(--gold);margin:1.1rem auto}
+.dt{font-family:var(--sc);font-weight:600;font-size:.84rem;letter-spacing:.24em;line-height:1.9}
+.orn{width:28px;height:28px;margin:1rem auto 0;display:block;fill:var(--gold)}
+.bl{position:absolute;width:96px;height:150px;pointer-events:none}
+.b1{right:-34px;top:38%}.b2{left:-40px;top:8%;transform:scaleX(-1) rotate(-12deg);width:84px}
+.note{max-width:400px;margin:3rem auto 0;width:86vw}
+.note .paper{padding:1.6rem 1.4rem;text-align:center}
+.note p{font-style:italic;font-weight:500;letter-spacing:.07em;font-size:1.15rem;line-height:1.7}
+.count{display:grid;grid-template-columns:repeat(4,1fr);margin-top:1.2rem}
+.count div{border-left:1px solid var(--line)}.count div:first-child{border-left:0}
+.count b{display:block;font-family:var(--serif);font-weight:500;font-size:clamp(1.9rem,9vw,2.6rem);line-height:1.1;font-variant-numeric:lining-nums tabular-nums;color:var(--bur)}
+.count span{font-size:.6rem}
+.scroll{display:block;text-align:center;margin-top:1.4rem;color:var(--bur);animation:bob 2s ease-in-out infinite}
+@keyframes bob{50%{transform:translateY(6px)}}
+/* ---------- VINYL WIDGET ---------- */
+.hero .stack+.note{margin-top:7.4rem}
+.vinyl{position:absolute;left:-16px;bottom:-50px;z-index:8}
+.vbtn{position:relative;display:block;width:108px;height:108px;padding:0;border:0;border-radius:50%;background:none;cursor:pointer;filter:drop-shadow(0 8px 10px rgba(0,0,0,.45));transition:transform .3s}
+.vbtn:hover{transform:scale(1.05)}.vbtn:active{transform:scale(.96)}
+.disc{position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle,#0b0b0b 0 31%,transparent 31%),repeating-radial-gradient(circle,#0b0b0b 0 2px,#1d1d1d 2px 3px)}
+.disc::after{content:"";position:absolute;inset:0;border-radius:50%;background:conic-gradient(from 30deg,transparent 0 18%,rgba(255,255,255,.16) 24%,transparent 32% 68%,rgba(255,255,255,.12) 74%,transparent 82%)}
+.vinyl.on .disc{animation:spin 6s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.lbl{position:absolute;left:50%;top:50%;width:62px;height:62px;margin:-31px 0 0 -31px;border-radius:50%;background:var(--noise),#ece5d6;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;box-shadow:inset 0 0 0 1px rgba(0,0,0,.12)}
+.wv{display:flex;align-items:center;gap:3px}
+.wv i{width:10px;height:9px;background:repeating-linear-gradient(90deg,var(--gold) 0 1px,transparent 1px 3px);opacity:.8}
+.pl{width:22px;height:22px;border-radius:50%;background:#4a463f;display:grid;place-items:center}
+.pl svg{width:10px;height:10px;fill:#f3eee4;margin-left:1px}
+.vinyl.on .pl svg{display:none}
+.vinyl.on .pl::before{content:"";width:8px;height:8px;border-left:2.5px solid #f3eee4;border-right:2.5px solid #f3eee4}
+.lbl small{font-family:var(--sc);font-size:.42rem;letter-spacing:.14em;color:var(--ink);font-weight:600;line-height:1}
+#ytp{position:fixed;left:-9999px;top:0;width:200px;height:200px;opacity:0;pointer-events:none}
+.vpanel{position:absolute;left:0;top:calc(100% + 8px);width:min(86vw,340px);padding:.8rem;background:var(--noise),#f1ebdf;border-radius:6px;box-shadow:0 18px 36px -10px rgba(40,6,14,.5);opacity:0;visibility:hidden;transform:translateY(-8px);transition:opacity .3s,transform .3s,visibility .3s}
+.vinyl.on .vpanel{opacity:1;visibility:visible;transform:none}
+.vpanel p{font-style:italic;letter-spacing:.05em;font-size:1rem;text-align:center;margin:0 0 .6rem}
+.vpanel iframe{width:100%;height:175px;border:0;border-radius:10px;display:block}
+.vpanel a{display:block;text-align:center;margin-top:.6rem;font-family:var(--sc);font-weight:600;font-size:.78rem;letter-spacing:.2em;color:var(--bur);padding:.5rem}
+/* ---------- TURNTABLE ---------- */
+.vinyl{left:-12px;bottom:-90px;transform:scale(1.25);transform-origin:left bottom}
+.vbtn{width:150px;height:120px;border-radius:12px}
+.tt{position:absolute;inset:0;border-radius:12px;background:var(--noise),linear-gradient(160deg,#6b1626,#3f0914);box-shadow:inset 0 0 0 1px rgba(216,174,178,.35),inset 0 2px 0 rgba(255,255,255,.12)}
+.plat{position:absolute;left:5px;top:9px;width:106px;height:106px;border-radius:50%;background:radial-gradient(circle,#2a0a10 60%,#150407);box-shadow:inset 0 0 0 2px rgba(216,174,178,.25),0 2px 4px rgba(0,0,0,.5)}
+.rec{position:absolute;left:10px;top:14px;width:96px;height:96px}
+.arm{position:absolute;left:125px;top:18px;width:6px;height:66px;border-radius:3px;background:linear-gradient(90deg,#e0d3b4,#a58a57);transform-origin:50% 3px;transform:rotate(-10deg);transition:transform 1s var(--ease);box-shadow:1px 2px 3px rgba(0,0,0,.4)}
+.arm::before{content:"";position:absolute;left:-6px;top:-6px;width:18px;height:18px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#efe4c8,#a58a57);box-shadow:0 2px 3px rgba(0,0,0,.5)}
+.arm::after{content:"";position:absolute;left:-3px;bottom:-8px;width:12px;height:14px;border-radius:2px;background:#2b2b2b;transform:rotate(8deg)}
+.vinyl.on .arm{transform:rotate(30deg)}
+/* ---------- SECTIONS ---------- */
+section{max-width:440px;width:86vw;margin:3.5rem auto}
+section .paper{padding:2.2rem 1.5rem;text-align:center}
+h2{font-family:var(--sc);font-weight:500;font-size:clamp(1.7rem,8vw,2.2rem);letter-spacing:.16em;line-height:1.15;margin-bottom:1.4rem;padding-left:.16em}
+.eb{font-size:.74rem;display:block;margin-bottom:.5rem}
+.row{border-top:1px solid var(--line);padding:1rem 0;text-align:center}
+.row h3{font-family:var(--sc);font-weight:600;font-size:.78rem;letter-spacing:.26em;margin-bottom:.2rem}
+.row p+p{font-size:1rem;color:var(--mute);margin-top:.3rem}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:.6rem;min-height:56px;padding:.9rem 2rem;border-radius:2px;border:1px solid var(--bur);background:var(--bur);color:#f6ece6;font-family:var(--sc);font-weight:600;font-size:.92rem;letter-spacing:.24em;text-decoration:none;cursor:pointer;transition:transform .3s,box-shadow .3s,background .3s,color .3s}
+.btn:hover{transform:translateY(-2px);box-shadow:0 14px 22px -12px rgba(90,15,28,.8)}
+.btn:active{transform:scale(.97)}
+.btn.ghost{background:transparent;color:var(--bur)}.btn.ghost:hover{background:var(--bur);color:#f6ece6}
+.cta{margin-top:1.4rem;display:flex;flex-direction:column;align-items:center;gap:.9rem}
+.cta .big{width:100%}
+.chev{transition:transform .4s}[aria-expanded=true] .chev{transform:rotate(180deg)}
+.tips{display:grid;grid-template-rows:0fr;transition:grid-template-rows .6s var(--ease)}
+.tips.show{grid-template-rows:1fr}.tips>div{overflow:hidden}
+.tips ul{list-style:none;padding:0;margin:1.2rem 0 0;display:grid;gap:.9rem;text-align:left}
+.tips li{border-left:2px solid var(--gold);padding:.1rem 0 .1rem .9rem;font-size:1.05rem;color:var(--mute)}
+.tips li strong{display:block;font-family:var(--sc);font-size:.8rem;letter-spacing:.2em;color:var(--ink);font-weight:600}
+form{display:grid;gap:1.4rem;text-align:left}
+label,legend{display:block;font-family:var(--sc);font-weight:600;font-size:.78rem;letter-spacing:.2em;margin-bottom:.1rem;padding:0}
+input[type=text],input[type=email],textarea{width:100%;min-height:52px;padding:.6rem .1rem;background:transparent;border:0;border-bottom:1px solid var(--line);border-radius:0;font-size:1.2rem;transition:border-color .3s,box-shadow .3s}
+textarea{min-height:100px;resize:vertical}
+::placeholder{color:rgba(46,26,28,.45);font-style:italic}
+input:focus,textarea:focus{outline:0;border-color:var(--bur);box-shadow:0 1px 0 var(--bur)}
+fieldset{border:0;padding:0}
+.radios{display:grid;grid-template-columns:1fr 1fr;gap:.7rem;margin-top:.4rem}
+.radios label{margin:0;cursor:pointer;font-family:var(--serif);font-weight:500;font-size:1.08rem;letter-spacing:.02em}
+.radios input{position:absolute;opacity:0}
+.radios span{display:flex;align-items:center;justify-content:center;text-align:center;min-height:54px;padding:.4rem;border:1px solid var(--line);transition:all .3s}
+.radios label:hover span{border-color:var(--bur)}
+.radios input:checked+span{background:var(--bur);border-color:var(--bur);color:#f6ece6}
+.radios input:focus-visible+span{outline:2px solid var(--bur);outline-offset:3px}
+.err{color:#a3282f;font-size:.95rem;min-height:1.2em}
+.sw{display:flex;justify-content:center;gap:.8rem;margin:1.2rem 0 .2rem}
+.sw i{width:44px;height:44px;border-radius:50%;box-shadow:inset 0 0 0 1px rgba(0,0,0,.15),0 6px 10px -6px rgba(0,0,0,.5);transition:transform .3s}
+.sw i:hover{transform:translateY(-5px) scale(1.08)}
+.wall{display:grid;gap:1rem;margin-top:1.2rem}
+.wall .wn{animation:drop .7s var(--ease)}
+.wall .paper{padding:1.1rem 1.2rem;text-align:left}
+.wall p{font-style:italic;letter-spacing:.04em;font-size:1.1rem;line-height:1.5}
+.wall small{font-family:var(--sc);font-size:.7rem;letter-spacing:.2em;color:var(--bur)}
+@keyframes drop{from{opacity:0;transform:translateY(-14px)}}
+footer{text-align:center;padding:2rem 1rem 4rem}
+footer .mdl{width:80px;height:80px;margin:0 auto .8rem}
+footer p{font-size:.74rem}
+.modal{position:fixed;inset:0;z-index:100;display:grid;place-items:center;padding:1.2rem;background:rgba(50,8,16,.6);backdrop-filter:blur(6px);opacity:0;visibility:hidden;transition:opacity .4s,visibility .4s}
+.modal.show{opacity:1;visibility:visible}
+.mwrap{max-width:420px;width:100%;transform:translateY(30px) scale(.94);transition:transform .6s var(--ease)}
+.modal.show .mwrap{transform:none}
+.mbox{position:relative;overflow:hidden;padding:2.4rem 1.6rem;text-align:center}
+.mbox h3{font-family:var(--script);font-weight:400;font-size:2.8rem;color:var(--bur);line-height:1.1;margin:.8rem 0 .5rem}
+.mbox p{color:var(--mute);margin-bottom:1.5rem}
+.tick{width:80px;height:80px}
+.tick circle,.tick path{fill:none;stroke:var(--bur);stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:240;stroke-dashoffset:240}
+.modal.show .tick circle{animation:draw 1s .3s forwards}.modal.show .tick path{animation:draw .6s 1s forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+.pet{position:absolute;top:-20px;width:10px;height:14px;border-radius:50% 0;opacity:0}
+.modal.show .pet{animation:fall 3s ease-in forwards}
+@keyframes fall{0%{opacity:.9;transform:translateY(0) rotate(0)}100%{opacity:0;transform:translateY(480px) rotate(540deg)}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition-duration:.01ms!important}html{scroll-behavior:auto}}
+</style>
+</head>
+<body class="locked">
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+<symbol id="mdl" viewBox="0 0 100 100"><circle cx="50" cy="50" r="47" fill="#7a1a2b" stroke="#d8aeb2" stroke-width="2"/><circle cx="50" cy="50" r="41" fill="none" stroke="#d8aeb2" stroke-width="2.4" stroke-dasharray=".1 4.4" stroke-linecap="round"/><circle cx="50" cy="50" r="35" fill="none" stroke="#d8aeb2" stroke-width="1" opacity=".7"/><text x="50" y="61" text-anchor="middle" font-family="Pinyon Script,cursive" font-size="30" fill="#e8c3c6">R&amp;G</text></symbol>
+<symbol id="sprig" viewBox="0 0 120 60"><g fill="#7d8466"><ellipse cx="60" cy="30" rx="5" ry="19" transform="rotate(-72 60 52)"/><ellipse cx="60" cy="30" rx="5" ry="19" transform="rotate(-44 60 52)"/><ellipse cx="60" cy="30" rx="5" ry="19" transform="rotate(-16 60 52)"/><ellipse cx="60" cy="30" rx="5" ry="19" transform="rotate(16 60 52)"/><ellipse cx="60" cy="30" rx="5" ry="19" transform="rotate(44 60 52)"/><ellipse cx="60" cy="30" rx="5" ry="19" transform="rotate(72 60 52)"/><ellipse cx="60" cy="24" rx="4" ry="20"/></g><circle cx="60" cy="52" r="3.5" fill="#a58a57"/></symbol>
+</defs></svg>
+
+<div id="intro">
+  <div class="env" id="env">
+    <div class="back"></div>
+    <div class="card-in dk"><small class="sc">Virtual wedding of</small><b>Ruby<br>&amp; Gen</b></div>
+    <div class="pocket"></div>
+    <div class="flap">
+      <div class="ff"><svg viewBox="0 0 224 100" aria-hidden="true"><path d="M10 7L214 7L112 90Z" fill="none" stroke="#7a1a2b" stroke-width="9" stroke-dasharray=".1 7.5" stroke-linecap="round"/><path d="M10 7L214 7L112 90Z" fill="none" stroke="rgba(255,190,198,.22)" stroke-width="1.2" stroke-dasharray="1.5 6" transform="translate(0 7)"/></svg></div>
+      <div class="fb"><svg id="liner" viewBox="0 0 224 100" aria-hidden="true"></svg></div>
+    </div>
+    <button class="seal" id="seal" aria-label="Open the invitation"><svg viewBox="0 0 100 100"><use href="#mdl"/></svg></button>
+  </div>
+  <p class="hint sc">Tap the seal to open</p>
+</div>
+
+<main>
+  <header class="hero">
+    <div class="stack">
+      <div class="layer l2 sh"><div class="dk"></div></div>
+      <div class="layer l1 sh"><div class="dk"></div></div>
+      <div class="main sh"><div class="dk paper">
+        <div class="arch">
+          <svg class="top" viewBox="0 0 120 60" aria-hidden="true"><use href="#sprig"/></svg>
+          <p class="lab">Together with<br>their families</p>
+          <h1 class="nm">Ruby<span>&amp;</span>Gen</h1>
+          <p class="lab">Invite you to<br>celebrate their marriage</p>
+          <i class="rule"></i>
+          <p class="dt">19 November 2026<br>Zoom · Bali, 12 AM (GMT+8)</p>
+          <svg class="orn" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 1l2 8 8 3-8 3-2 8-2-8-8-3 8-3z"/></svg>
+        </div>
+      </div></div>
+      <svg class="bl b1" viewBox="0 0 96 150" aria-hidden="true"></svg>
+      <svg class="bl b2" viewBox="0 0 96 150" aria-hidden="true"></svg>
+      <div class="vinyl" id="vinyl">
+        <button class="vbtn" id="vbtn" type="button" aria-pressed="false" aria-label="Tap to listen to our song">
+          <span class="tt"><span class="plat"></span><span class="rec"><span class="disc"></span>
+          <span class="lbl"><span class="wv"><i></i><span class="pl"><svg viewBox="0 0 10 10"><path d="M1 0l9 5-9 5z"/></svg></span><i></i></span><small>TAP TO LISTEN</small></span></span><span class="arm"></span></span>
+        </button>
+        <div id="ytp" aria-hidden="true"></div>
+      </div>
+    </div>
+
+    <div class="note sh"><div class="dk paper" id="invnote">
+      <p>You are cordially invited to celebrate our wedding day from anywhere in the world.</p>
+    </div></div>
+    <div class="note sh"><div class="dk paper">
+      <p class="sc" style="font-style:normal;font-size:.78rem;letter-spacing:.24em">The Zoom ceremony begins in</p>
+      <div class="count" role="timer" aria-live="off">
+        <div><b id="d">00</b><span class="sc">Days</span></div><div><b id="h">00</b><span class="sc">Hours</span></div><div><b id="m">00</b><span class="sc">Minutes</span></div><div><b id="s">00</b><span class="sc">Seconds</span></div>
+      </div>
+    </div></div>
+    <a class="scroll" href="#portal" aria-label="Scroll to details"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M6 9l6 6 6-6"/></svg></a>
+  </header>
+
+  <section id="portal"><div class="sh"><div class="dk paper">
+    <span class="eb sc">Join us online</span>
+    <h2>Zoom Portal</h2>
+    <div class="row"><h3>The Date</h3><p>November 19, 2026 · 12:00 AM<br>Bali, Indonesia (GMT+8)</p><p>Joining from elsewhere? Please check your local time zone.</p></div>
+    <div class="row"><h3>Virtual Venue</h3><p>The Zoom Ceremony Room</p><p>Open the link a few minutes early. You will be welcomed from the waiting room.</p></div>
+    <div class="cta">
+      <a class="btn big" href="https://app.acuityscheduling.com/schedule.php?owner=17450053&amp;action=zoom&amp;uniqueID=b195253bc44b22472e163bb80f75921e&amp;ownerID=17450053" target="_blank" rel="noopener">Join Zoom Ceremony</a>
+      <button class="btn ghost big" id="tipBtn" aria-expanded="false" aria-controls="tips">Zoom tech tips <svg class="chev" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></button>
+    </div>
+    <div class="tips" id="tips"><div><ul>
+      <li><strong>Mute when you enter</strong>Keep your microphone off until the hosts invite everyone to cheer.</li>
+      <li><strong>Switch to Gallery View</strong>Tap the view icon at the top right to see all our guests at once.</li>
+      <li><strong>Test your video setup</strong>Open Zoom a day early to check your camera, sound and connection.</li>
+      <li><strong>Set your viewing space</strong>Face a window or lamp, tidy your background, and add flowers or candles.</li>
+      <li><strong>On a phone?</strong>Update the Zoom app, plug in your charger and turn on Do Not Disturb.</li>
+    </ul></div></div>
+  </div></div></section>
+
+  <section id="rsvp"><div class="sh"><div class="dk paper">
+    <span class="eb sc">Kindly reply</span>
+    <h2>RSVP</h2>
+    <form id="rsvpForm" novalidate>
+      <div><label for="name">Guest name(s)</label><input id="name" type="text" autocomplete="name"><div class="err" id="eName"></div></div>
+      <div><label for="email">Email</label><input id="email" type="email" autocomplete="email"><div class="err" id="eEmail"></div></div>
+      <fieldset><legend>Attending via stream?</legend>
+        <div class="radios"><label><input type="radio" name="att" value="Yes" checked><span>Yes, we will be there</span></label><label><input type="radio" name="att" value="No"><span>Sadly, no</span></label></div>
+      </fieldset>
+      <div><label for="where">What country/city are you tuning in from?</label><input id="where" type="text" placeholder="e.g. Lisbon, Portugal" autocomplete="off"></div>
+      <div><label for="bless">Send a virtual blessing</label><textarea id="bless" placeholder="A wish, a memory or some advice for Ruby &amp; Gen"></textarea></div>
+      <button class="btn" type="submit">Send my RSVP</button>
+    </form>
+  </div></div></section>
+
+  <section id="dress"><div class="sh"><div class="dk paper">
+    <span class="eb sc">Virtual guestbook &amp; experiences</span>
+    <h2>Dress Code</h2>
+    <div class="row" style="border-top:0"><h3>Virtual Formal</h3><p>Cocktail from the waist up!</p><p>Dress up for the camera in our palette. Pyjama bottoms are our little secret.</p></div>
+    <div class="sw" role="img" aria-label="Palette: burgundy, dusty rose, ivory, sage, gold"><i style="background:#6e1424"></i><i style="background:#8c5560"></i><i style="background:#efe9dc"></i><i style="background:#7d8466"></i><i style="background:#a58a57"></i></div>
+    <div class="row" style="margin-top:1.4rem"><h3>Guestbook</h3><p>Blessings sent with your RSVP appear here.</p></div>
+    <div class="wall" id="wall"><div class="sh"><div class="dk paper"><p>Wishing you a lifetime of love, laughter and long Sunday mornings.</p><small>With love · Ruby &amp; Gen's families</small></div></div></div>
+  </div></div></section>
+
+  <footer><svg class="mdl" viewBox="0 0 100 100" aria-hidden="true"><use href="#mdl"/></svg><p class="sc">November 19, 2026 · Bali · Everywhere</p></footer>
+</main>
+
+<div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="mt">
+  <div class="mwrap sh"><div class="dk paper mbox" id="mbox">
+    <svg class="tick" viewBox="0 0 84 84"><circle cx="42" cy="42" r="38"/><path d="M26 43l11 11 21-23"/></svg>
+    <h3 id="mt">Thank you for RSVPing!</h3>
+    <p id="mp">We can't wait to celebrate with you.</p>
+    <a class="btn big" id="mailBtn" href="mailto:rubyacolacol@icloud.com" style="width:100%;margin-bottom:.9rem">Email my RSVP to Ruby &amp; Gen</a>
+    <p id="mailNote" style="font-size:.98rem;margin-bottom:1.1rem">Last step: tap the button above, then press send in your email app so your reply reaches us.</p>
+    <button class="btn ghost" id="mclose" type="button">Back to the invitation</button>
+  </div></div>
+</div>
+
+<script>
+const $=id=>document.getElementById(id);
+const SHEET_URL=''; https://script.google.com/macros/s/AKfycbzQZxExHPWt8DyUi0StZ7O53HLwzSRlNBP0QHPxdo7QmG8gC8yHB2yXhUAyg6Zkb5Ak/exec
+// Deckled (torn) paper edges
+function deckle(el,seed){
+  let r=seed;const rnd=()=>(r=(r*9301+49297)%233280)/233280,n=44,a=1.1,p=[];
+  for(let i=0;i<=n;i++)p.push([i/n*100,rnd()*a]);
+  for(let i=1;i<=n;i++)p.push([100-rnd()*a,i/n*100]);
+  for(let i=1;i<=n;i++)p.push([100-i/n*100,100-rnd()*a]);
+  for(let i=1;i<n;i++)p.push([rnd()*a,100-i/n*100]);
+  el.style.clipPath='polygon('+p.map(q=>q[0].toFixed(2)+'% '+q[1].toFixed(2)+'%').join(',')+')';
+}
+function deckleAll(){document.querySelectorAll('.dk').forEach((e,i)=>deckle(e,i*37+11))}
+// Hand-built florals (blossoms + leaves)
+function bloom(svg,cx,cy,R,n,seed,leaves){
+  let r=seed;const rnd=()=>(r=(r*9301+49297)%233280)/233280,NS='http://www.w3.org/2000/svg';
+  const add=(t,at)=>{const e=document.createElementNS(NS,t);for(const k in at)e.setAttribute(k,at[k]);svg.appendChild(e)};
+  for(let i=0;i<leaves;i++){const a=-150+i*(300/Math.max(1,leaves-1));add('ellipse',{cx,cy:cy-R*.9,rx:R*.22,ry:R*.7,fill:i%2?'#6f7858':'#7d8466',transform:`rotate(${a} ${cx} ${cy})`})}
+  for(let i=0;i<n;i++){const t=rnd()*6.283,d=R*Math.sqrt(rnd()),s=R*(.11+rnd()*.1);
+    add('circle',{cx:cx+d*Math.cos(t),cy:cy+d*Math.sin(t),r:s,fill:'#f7f3ea',stroke:'#cdbfa8','stroke-width':.6});
+    add('circle',{cx:cx+d*Math.cos(t),cy:cy+d*Math.sin(t),r:s*.28,fill:'#c8b48c'})}
+}
+bloom($('liner'),112,50,40,34,5,6);
+const bls=document.querySelectorAll('.bl');bloom(bls[0],48,75,40,24,9,5);bloom(bls[1],48,75,36,20,3,5);
+deckleAll();addEventListener('load',deckleAll);
+// Envelope
+$('seal').addEventListener('click',()=>{
+  $('env').classList.add('open');$('intro').classList.add('open');
+  setTimeout(()=>{$('intro').classList.add('gone');document.body.classList.remove('locked');window.scrollTo(0,0)},3200);
+});
+// Countdown (12:00 AM Bali, GMT+8)
+const target=new Date('2026-11-19T00:00:00+08:00').getTime(),pad=n=>String(n).padStart(2,'0');
+function tick(){const t=Math.max(0,target-Date.now())/1000;
+  $('d').textContent=pad(Math.floor(t/86400));$('h').textContent=pad(Math.floor(t%86400/3600));
+  $('m').textContent=pad(Math.floor(t%3600/60));$('s').textContent=pad(Math.floor(t%60));}
+tick();setInterval(tick,1000);
+$('tipBtn').addEventListener('click',e=>{const on=$('tips').classList.toggle('show');e.currentTarget.setAttribute('aria-expanded',on)});
+// Vinyl widget: plays the song from YouTube (player hidden)
+const vin=$('vinyl'),vb=$('vbtn'),YT_ID='uz2lb9HbMTc';let yt,ytReady=false;
+const setOn=on=>{vin.classList.toggle('on',on);vb.setAttribute('aria-pressed',on)};
+const ytTag=document.createElement('script');ytTag.src='https://www.youtube.com/iframe_api';document.head.appendChild(ytTag);
+window.onYouTubeIframeAPIReady=()=>{yt=new YT.Player('ytp',{videoId:YT_ID,playerVars:{playsinline:1,controls:0,rel:0,modestbranding:1},
+  events:{onReady:()=>{ytReady=true},onStateChange:e=>setOn(e.data===1||e.data===3),onError:()=>{ytReady=false;setOn(false)}}})};
+// Preferred: play song.mp3 (same folder as index.html) right on the page; YouTube is only a backup
+const aud=new Audio('song.mp3');aud.preload='auto';aud.loop=true;let audOK=true;
+aud.addEventListener('error',()=>{audOK=false});
+aud.addEventListener('play',()=>setOn(true));aud.addEventListener('pause',()=>setOn(false));
+function ytToggle(){
+  if(!ytReady){window.open('https://www.youtube.com/watch?v='+YT_ID,'_blank','noopener');return}
+  yt.getPlayerState()===1?yt.pauseVideo():yt.playVideo();
+}
+vb.addEventListener('click',()=>{
+  if(!audOK)return ytToggle();
+  if(aud.paused)aud.play().catch(()=>{audOK=false;ytToggle()});else aud.pause();
+});
+// RSVP
+const form=$('rsvpForm');
+form.addEventListener('submit',e=>{
+  e.preventDefault();
+  const name=$('name').value.trim(),email=$('email').value.trim();
+  $('eName').textContent=name?'':'Please enter your name.';
+  $('eEmail').textContent=/^\S+@\S+\.\S+$/.test(email)?'':'Please enter a valid email address.';
+  if(!name||$('eEmail').textContent)return;
+  const att=form.att.value,bless=$('bless').value.trim(),where=$('where').value.trim();
+  if(bless){
+    const w=document.createElement('div');w.className='sh wn';const d=document.createElement('div');d.className='dk paper';
+    const p=document.createElement('p');p.textContent=bless;
+    const s=document.createElement('small');s.textContent=name+(where?' · from '+where:'');
+    d.append(p,s);w.append(d);$('wall').prepend(w);deckle(d,Math.floor(Math.random()*900));
+  }
+  $('mp').textContent=att==='Yes'?`We can't wait to celebrate with you${where?' in '+where:''}, ${name}.`:`We will miss you, ${name}, and are grateful for your love.`;
+  const body=['Name(s): '+name,'Email: '+email,'Attending via stream: '+att,'Tuning in from: '+(where||'-'),'Blessing: '+(bless||'-')].join('\n');
+  $('mailBtn').href='mailto:rubyacolacol@icloud.com?subject='+encodeURIComponent('RSVP: '+name)+'&body='+encodeURIComponent(body);
+  if(SHEET_URL){fetch(SHEET_URL,{method:'POST',mode:'no-cors',body:new URLSearchParams({name,email,attending:att,location:where,blessing:bless})}).catch(()=>{})}
+  document.querySelectorAll('#mailBtn,#mailNote').forEach(x=>x.style.display=SHEET_URL?'none':'');
+  document.querySelectorAll('.pet').forEach(x=>x.remove());
+  for(let i=0;i<18;i++){const p=document.createElement('i');p.className='pet';p.style.left=Math.random()*100+'%';p.style.animationDelay=Math.random()*1.5+'s';p.style.background=['#a58a57','#6e1424','#8c5560'][i%3];$('mbox').appendChild(p)}
+  $('modal').classList.add('show');$('mclose').focus();form.reset();
+});
+const close=()=>$('modal').classList.remove('show');
+$('mclose').addEventListener('click',close);
+$('modal').addEventListener('click',e=>{if(e.target.id==='modal')close()});
+addEventListener('keydown',e=>{if(e.key==='Escape')close()});
+</script>
+</body>
+</html>
